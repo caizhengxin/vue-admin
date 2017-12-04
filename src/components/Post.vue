@@ -1,24 +1,11 @@
 <template>
 	<section class="record-box">
 		<el-col :span="24" class="toolbar">
-<!-- 			<el-form :model="filters">
+			<el-form :model="filters">
 				<el-form-item>
 					<el-input placeholder="日期" class="search" :model="filters.name"></el-input>
 				</el-form-item>
-			</el-form> -->
-			<div class="block">
-				<el-date-picker
-      			  v-model="dates"
-			      type="datetimerange"
-			      :picker-options="pickerOptions"
-			      range-separator="至"
-			      start-placeholder="开始日期"
-			      end-placeholder="结束日期"
-			      align="right"
-			      value-format="yyyy-MM-dd HH:mm:ss"
-			      @change="handleChange">
-    			</el-date-picker>
-			</div>
+			</el-form>
 		</el-col>
 
 		<el-table
@@ -111,7 +98,7 @@
 </style>
 
 <script>
-	import {getRecordPage, deleteRecordPage, deleteRecordBatch} from '../../api/api';
+	import {getRecordPage, deleteRecordPage, deleteRecordBatch} from '../api/api';
 
 	export default {
 		data() {

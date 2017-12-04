@@ -18,11 +18,11 @@
                             <i :class="item.iconCls"></i>
                             <span slot="title">{{ item.name }}</span>
                         </template>
-                        <el-menu-item v-for="child in item.children" :index="child.path" v-if="!child.hidden">
+                        <el-menu-item v-for="child in item.children" :index="item.path + '/' + child.path" v-if="!child.hidden">
                             <span slot="title">{{ child.name }}</span>
                         </el-menu-item>
                     </el-submenu>
-                    <el-menu-item v-if="item.leaf && item.children.length > 0" :index="item.children[0].path">
+                    <el-menu-item v-if="item.leaf && item.children.length > 0" :index="item.path + '/' + item.children[0].path">
                         <i :class="item.iconCls"></i>
                         <span slot="title">{{ item.children[0].name }}</span>
                     </el-menu-item>
@@ -68,10 +68,10 @@
         },
         methods: {
             handleOpen(key, keyPath) {
-                console.log(key, keyPath);
+                // console.log(key, keyPath);
             },
             handleClose(key, keyPath) {
-                console.log(key, keyPath);
+                // console.log(key, keyPath);
             },
             collapse() {
                 this.isCollapse = !this.isCollapse;
