@@ -7,6 +7,7 @@ import Main from '../components/Main.vue'
 import Post from '../components/Post.vue'
 import HelloWorld from '../components/HelloWorld.vue'
 import User from '../components/user/User.vue'
+import CMSGroup from '../components/user/CMSGroup.vue'
 
 Vue.use(Router)
 
@@ -32,7 +33,7 @@ export default new Router({
             children: [
                 {path: 'fontuser', name: '用户管理', component: User, meta: { keepAlive: true }},
                 {path: 'cmsuser', name: 'CMS用户管理', component: HelloWorld, meta: { keepAlive: true }},
-                {path: 'cmsgroup', name: 'CMS组管理', component: HelloWorld, meta: { keepAlive: true }},
+                {path: 'cmsgroup', name: 'CMS组管理', component: CMSGroup, meta: { keepAlive: true }},
             ]
         },
         {

@@ -2,13 +2,14 @@
 * @Author: caixin
 * @Date:   2017-11-27 17:11:07
 * @Last Modified by:   1249614072@qq.com
-* @Last Modified time: 2017-12-01 10:34:10
+* @Last Modified time: 2017-12-05 12:01:38
 */
 import Mock from 'mockjs'
 
 
 const Record = [];
 const User = [];
+const CMSGroup = [];
 
 Mock.Random.extend({
 	tel: function(date) {
@@ -47,7 +48,28 @@ for(let i = 0; i < 50; i++) {
     }))
 }
 
+
+let permission = [
+	['超级管理员', '拥有所有权限', 255],
+	['普通管理员', '只读权限', 1],
+]
+
+
+for(let i = 0; i < 2; i++) {
+    CMSGroup.push(Mock.mock({
+    	id: Mock.Random.guid(),
+    	permission_name: permission[i][0],
+    	permission_desc: permission[i][1],
+    	permission_value: permission[i][2],
+    	users: Mock.Random.integer(0, 5),
+    	startdate: Mock.Random.date('yyyy-MM-dd HH:mm:ss'),
+    	enddate: Mock.Random.date('yyyy-MM-dd HH:mm:ss'),
+    }))
+}
+
+
 export {
 	Record,
-	User
+	User,
+	CMSGroup,
 }

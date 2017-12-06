@@ -12,9 +12,10 @@ import Echarts from 'echarts'
 import axios from 'axios'
 import Mock from './mock'
 
-Vue.config.productionTip = false
 
 Vue.use(ElementUI)
+
+Vue.config.productionTip = false
 
 Vue.prototype.$Echarts = Echarts
 Vue.prototype.$http = axios
