@@ -30,9 +30,17 @@
             </el-menu>
             <el-container :class="isCollapse ? 'main-box-collapse-width': 'main-box'">
                 <el-header>
-                    <div class="tools" @click="collapse">
-                        <i class="fa fa-align-justify"></i>
-                    </div>
+                        <span class="tools" @click="collapse">
+                            <i class="fa fa-align-justify"></i>
+                        </span>
+                        <el-dropdown trigger="hover" class="avatar">
+                            <span class="el-dropdown-link"><span>{{User}}</span><img :src="this.Avatar" alt="avatar" width="40px" height="40px"></span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>我的消息</el-dropdown-item>
+                                <el-dropdown-item>设置</el-dropdown-item>
+                                <el-dropdown-item divided @click.native="handleLogout">退出登录</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
                 </el-header>
                 <el-main>
                     <el-row>
@@ -64,18 +72,39 @@
             return {
                 isCollapse: false,
                 logName: "CAIXIN",
+
+                Avatar: '',
+                User: '',
             };
         },
         methods: {
-            handleOpen(key, keyPath) {
+            handleOpen: function(key, keyPath) {
                 // console.log(key, keyPath);
             },
-            handleClose(key, keyPath) {
+            handleClose: function(key, keyPath) {
                 // console.log(key, keyPath);
             },
-            collapse() {
+            collapse: function() {
                 this.isCollapse = !this.isCollapse;
             },
+            handleLogout: function() {
+                this.$confirm('确认退出吗？', '提示', {
+                    type: 'warning',
+                }).then(() => {
+                    sessionStorage.removeItem('user');
+                    this.$router.push('/cms/login')
+                }).catch(() => {
+
+                })
+            }
+        },
+        mounted() {
+            var user = sessionStorage.getItem('user');
+            if (user) {
+                user = JSON.parse(user);
+                this.User = user.name || '';
+                this.Avatar = user.avatar || '';
+            }
         }
     }
 </script>
@@ -122,6 +151,8 @@
     .tools {
         width: 30px;
         cursor: pointer;
+        float: left;
+        margin-left: 10px;
     }
 
     .nav-collapse-width {
@@ -164,5 +195,19 @@
         float: left;
         color: #475669;
     }
-  
+
+    .avatar {
+        cursor: pointer;
+        float: right;
+    }
+
+    .avatar span {
+        color: #fff;
+    }
+
+    .avatar img {
+        border-radius: 20px;
+        vertical-align: middle;
+        margin: 0 20px 0 10px;
+    }
 </style>
