@@ -2,7 +2,7 @@
 * @Author: caixin
 * @Date:   2017-11-25 16:13:36
 * @Last Modified by:   1249614072@qq.com
-* @Last Modified time: 2017-12-05 11:06:43
+* @Last Modified time: 2017-12-06 21:14:40
 */
 import axios from 'axios';
 
@@ -24,6 +24,14 @@ const deleteCMSGroups = params => { return axios.post(`${base}/cmsgroupbatch`, p
 const addCMSGroup = params => { return axios.post(`${base}/addcmsgroup`, params).then(res => res.data); };
 const modifyCMSGroup = params => { return axios.post(`${base}/modifycmsgroup`, params).then(res => res.data); };
 
+
+const getCMSUserList = params => { return axios.get(`${base}/cmsuser`, { params: params }); };
+const deleteCMSUser = params => { return axios.post(`${base}/cmsuser`, params).then(res => res.data); };
+const deleteCMSUsers = params => { return axios.post(`${base}/cmsuserbatch`, params).then(res => res.data); };
+const modifyCMSUser = params => { return axios.post(`${base}/cmsusermodify`, params).then(res => res.data); };
+const addCMSUsers = params => { return axios.post(`${base}/addcmsuser`, params).then(res => res.data); };
+
+
 export {
 	getUserList,
 	deleteUser,
@@ -39,4 +47,10 @@ export {
 	deleteCMSGroups,
 	addCMSGroup,
 	modifyCMSGroup,
+
+	getCMSUserList,
+	deleteCMSUser,
+	deleteCMSUsers,
+	modifyCMSUser,
+	addCMSUsers,
 }

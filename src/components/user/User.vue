@@ -128,28 +128,34 @@
 			}
 		},
 		methods: {
-			requests(func, para, execute) {
-				func(para).then(data => {
-					this.loading = false;
-					let types = "success"
+			requests(para) {
+				para['func'](para['para']).then(data => {
+
+					let types = "success";
+					let msg = data.msg
+
 					if (data['code'] != 200) {
-						types = "error"
+						types = "error";
+						msg = "操作失败"
 					}
 					this.$message({
-						message: data.msg,
+						message: msg,
 						type: types,
 					});
-					if (execute) {
-						this.getUser();
+
+					this.editFormVisible = false;
+					this.addFormVisible = false;
+
+					if (para['execute']) {
+						this.init();
 					}
 				})
 			},
-			message(para) {
+			confirm(para) {
 				this.$confirm(para['msg'], para['title'], {
 					type: para['type']
 				}).then(() => {
-					this.loading = true;
-					this.requests(para['func'], para['para'], para['execute']);
+					this.requests(para);
 				}).catch(() => {
 				})
 			},
@@ -158,13 +164,13 @@
 			// },
 			handleCurrentChange(val) {
 				this.page = val;
-				this.getUser();
+				this.init();
 			},
 			handleSizeChange(val) {
 				this.pageNum = val;
-				this.getUser();
+				this.init();
 			},
-			getUser: function() {
+			init: function() {
 				let para = {
 					name: this.search,
 					page: this.page,
@@ -178,7 +184,7 @@
 				})
 			},
 			handleDel: function(index, row) {
-				this.message({
+				this.confirm({
 					msg: '确认删除该记录吗？',
 					title: '提示',
 					type: 'warning',
@@ -189,7 +195,7 @@
 			},
 			handleBlack: function(index, row) {
 				let msg = row.status == 1 ? '确认拉黑吗？' : '确认恢复吗？'
-				this.message({
+				this.confirm({
 					msg: msg,
 					title: '提示',
 					type: 'warning',
@@ -197,14 +203,13 @@
 					para: {id: row.id},
 					execute: true,
 				});
-				// row.status = !row.status;
 			},
 			handleSelectionChange: function(sels) {
 				this.sels = sels;
 			},
 			batchRemove: function() {
 				let ids = this.sels.map(item => item.id).toString();
-				this.message({
+				this.confirm({
 					msg: '确认删除选中记录吗？',
 					title: '提示',
 					type: 'warning',
@@ -214,14 +219,14 @@
 				});
 			},
 			handleChangeSearch: function() {
-				this.getUser();
+				this.init();
 			},
 			filterStauts: function(value, row) {
 				return row.status == value;
 			},
 		},
 		mounted() {
-			this.getUser();
+			this.init();
 		},
 	}
 </script>

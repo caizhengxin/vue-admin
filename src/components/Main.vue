@@ -75,7 +75,7 @@
             },
             collapse() {
                 this.isCollapse = !this.isCollapse;
-            }
+            },
         }
     }
 </script>
@@ -131,7 +131,7 @@
 
     .nav-width {
         /*width: 220px !important;*/
-        width: 16% !important;
+        width: 14% !important;
     }
 
     .main-box {

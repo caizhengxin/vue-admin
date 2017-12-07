@@ -2,7 +2,7 @@
 * @Author: caixin
 * @Date:   2017-11-27 17:11:07
 * @Last Modified by:   1249614072@qq.com
-* @Last Modified time: 2017-12-05 12:01:38
+* @Last Modified time: 2017-12-06 21:25:51
 */
 import Mock from 'mockjs'
 
@@ -10,6 +10,7 @@ import Mock from 'mockjs'
 const Record = [];
 const User = [];
 const CMSGroup = [];
+const CMSUser = [];
 
 Mock.Random.extend({
 	tel: function(date) {
@@ -68,8 +69,25 @@ for(let i = 0; i < 2; i++) {
 }
 
 
+for(let i = 0; i < 50; i++) {
+    CMSUser.push(Mock.mock({
+        id: Mock.Random.guid(),
+        user: Mock.Random.cname(),
+        email: Mock.Random.email('qq.com'),
+        password: 'caixin',
+        group: permission[0][0],
+        startdate: Mock.Random.date('yyyy-MM-dd HH:mm:ss'),
+        enddate: Mock.Random.date('yyyy-MM-dd HH:mm:ss'),
+        startip: Mock.Random.ip(),
+        endip: Mock.Random.ip(),
+        status: Mock.Random.integer(0, 1),
+    }))
+}
+
+
 export {
 	Record,
 	User,
 	CMSGroup,
+    CMSUser,
 }
