@@ -2,7 +2,7 @@
 	<section class="record-box">
 		<el-col :span="24" class="toolbar">
 			<el-input 
-			  placeholder="请输入用户名/手机号"
+			  placeholder="请输入用户名/email"
 			  v-model.trim="search"
 			  class="search"
 			  @input="handleChangeSearch"

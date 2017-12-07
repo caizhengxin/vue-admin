@@ -2,9 +2,20 @@
 * @Author: caixin
 * @Date:   2017-11-27 17:11:07
 * @Last Modified by:   1249614072@qq.com
-* @Last Modified time: 2017-12-06 21:25:51
+* @Last Modified time: 2017-12-07 11:02:12
 */
 import Mock from 'mockjs'
+
+
+const LoginUsers = [
+    {
+        id: 1,
+        email: '1249614072@qq.com',
+        password: 'caixin',
+        avatar: 'http://opquj9rzr.bkt.clouddn.com/o_1bhhif8p4j431rsm1508gcshpu7.jpg?imageView2/1/w/150/h/150/format/png/q/75|imageslim',
+        name: '菜心'
+    }
+];
 
 
 const Record = [];
@@ -74,6 +85,7 @@ for(let i = 0; i < 50; i++) {
         id: Mock.Random.guid(),
         user: Mock.Random.cname(),
         email: Mock.Random.email('qq.com'),
+        avatar: 'http://opquj9rzr.bkt.clouddn.com/o_1bhhif8p4j431rsm1508gcshpu7.jpg?imageView2/1/w/150/h/150/format/png/q/75|imageslim',
         password: 'caixin',
         group: permission[0][0],
         startdate: Mock.Random.date('yyyy-MM-dd HH:mm:ss'),
@@ -86,6 +98,7 @@ for(let i = 0; i < 50; i++) {
 
 
 export {
+    LoginUsers,
 	Record,
 	User,
 	CMSGroup,

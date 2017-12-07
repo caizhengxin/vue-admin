@@ -9,12 +9,19 @@ import HelloWorld from '../components/HelloWorld.vue'
 import User from '../components/user/User.vue'
 import CMSGroup from '../components/user/CMSGroup.vue'
 import CMSUser from '../components/user/CMSUser.vue'
+import Login from '../components/Login.vue'
 
 Vue.use(Router)
 
 export default new Router({
     mode: 'history',
     routes: [
+        {
+            path: '/cms/login',
+            name: '',
+            hidden: true,
+            component: Login,
+        },
         {
             path: '/cms',
             name: '',

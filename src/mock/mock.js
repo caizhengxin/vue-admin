@@ -2,12 +2,12 @@
 * @Author: caixin
 * @Date:   2017-11-27 14:55:11
 * @Last Modified by:   1249614072@qq.com
-* @Last Modified time: 2017-12-06 22:14:30
+* @Last Modified time: 2017-12-07 11:31:51
 */
 import axios from 'axios'
 import Mock from 'mockjs'
 import MockAdapter from 'axios-mock-adapter'
-import {Record, User, CMSGroup, CMSUser} from './data/data'
+import {Record, User, CMSGroup, CMSUser, LoginUsers} from './data/data'
 
 let _Record = Record;
 let _User = User;
@@ -28,6 +28,28 @@ export default {
 				msg: 'failure',
 			}
 		)
+
+        mock.onPost('/login').reply(config => {
+          	let {email, password, remember} = JSON.parse(config.data);
+          	return new Promise((resolve, reject) => {
+            	let user = null;
+            	setTimeout(() => {
+              		let hasUser = LoginUsers.some(u => {
+                		if (u.email === email && u.password === password) {
+                  			user = JSON.parse(JSON.stringify(u));
+                  			user.password = undefined;
+                  			return true;
+                		}
+              		});
+
+              		if (hasUser) {
+                		resolve([200, { code: 200, msg: '请求成功', user }]);
+              		} else {
+                		resolve([200, { code: 500, msg: '账号或密码错误' }]);
+              		}
+            	}, 1000);
+          	});
+        });
 
 		mock.onGet('/user').reply(config => {
 				let {name, page, pageNum} = config.params;

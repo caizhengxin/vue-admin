@@ -27,7 +27,6 @@
     #app {
         color: #2c3e50;
         text-align: center;
-        /*margin-top: 60px;*/
     }
 
     .el-submenu [class^=iconfont] {
@@ -38,5 +37,9 @@
     .el-menu-item [class^=iconfont] {
         vertical-align: baseline;
         margin-right: 10px;
+    }
+
+    .el-form-item {
+        text-align: left;
     }
 </style>

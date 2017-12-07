@@ -22,6 +22,19 @@ Vue.prototype.$http = axios
 
 Mock.AnalogData()
 
+router.beforeEach((to, from, next) => {
+	if(to.path == '/cms/login') {
+		sessionStorage.removeItem('user');
+	}
+
+	let user = JSON.parse(sessionStorage.getItem('user'));
+	if (!user && to.path != '/cms/login') {
+		next({path: '/cms/login'})
+	} else {
+		next()
+	}
+})
+
 /* eslint-disable no-new */
 new Vue({
   router,

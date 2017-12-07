@@ -2,11 +2,13 @@
 * @Author: caixin
 * @Date:   2017-11-25 16:13:36
 * @Last Modified by:   1249614072@qq.com
-* @Last Modified time: 2017-12-06 21:14:40
+* @Last Modified time: 2017-12-07 11:08:41
 */
 import axios from 'axios';
 
 let base = '';
+
+const CMSLogin = params => { return axios.post(`${base}/login`, params).then(res => res.data); };
 
 const getUserList = params => { return axios.get(`${base}/user`, { params: params }); };
 const deleteUser = params => { return axios.post(`${base}/user`, params).then(res => res.data); };
@@ -33,6 +35,8 @@ const addCMSUsers = params => { return axios.post(`${base}/addcmsuser`, params).
 
 
 export {
+	CMSLogin,
+
 	getUserList,
 	deleteUser,
 	deleteUsers,
