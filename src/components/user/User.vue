@@ -8,7 +8,6 @@
 			  @input="handleChangeSearch"
 			  suffix-icon="el-icon-search">
 			</el-input>
-			<!-- <el-button type="primary" icon="el-icon-edit" class="add-user">添加用户</el-button> -->
 		</el-col>
 
 		<el-table
@@ -86,10 +85,6 @@
 		width: 20%;
 		float: left;
 	}
-
-/*	.add-user {
-		float: right;
-	}*/
 
 	tr {
 		text-align: left;

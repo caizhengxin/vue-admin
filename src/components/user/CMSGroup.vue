@@ -208,16 +208,18 @@
 			}
 		},
 		methods: {
-			requests(para) {
+			requests: function(para) {
 				para['func'](para['para']).then(data => {
 
 					let types = "success";
+					let msg = data.msg
 
 					if (data['code'] != 200) {
 						types = "error";
+						msg = "操作失败"
 					}
 					this.$message({
-						message: data.msg,
+						message: msg,
 						type: types,
 					});
 
@@ -229,7 +231,7 @@
 					}
 				})
 			},
-			confirm(para) {
+			confirm: function(para) {
 				this.$confirm(para['msg'], para['title'], {
 					type: para['type']
 				}).then(() => {
@@ -237,9 +239,6 @@
 				}).catch(() => {
 				})
 			},
-			// formatStatus: function(row, column) {
-			// 	return row.status == 1 ? '禁用' : '可用';
-			// },
 			handleCurrentChange(val) {
 				this.page = val;
 				this.init();
@@ -267,7 +266,6 @@
 					type: 'warning',
 					func: deleteCMSGroup,
 					para: {id: row.id},
-					loading: this.loading,
 					execute: true,
 				});
 			},
@@ -282,7 +280,6 @@
 					type: 'warning',
 					func: deleteCMSGroups,
 					para: {ids: ids},
-					loading: this.addLoading,
 					execute: true,
 				});
 			},

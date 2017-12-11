@@ -141,38 +141,46 @@
 			}
 		},
 		methods: {
-			requests(func, para) {
-				func(para).then(data => {
-					this.loading = false;
-					let types = "success"
+			requests: function(para) {
+				para['func'](para['para']).then(data => {
+
+					let types = "success";
+					let msg = data.msg
+
 					if (data['code'] != 200) {
-						types = "error"
+						types = "error";
+						msg = "操作失败"
 					}
 					this.$message({
-						message: data.msg,
+						message: msg,
 						type: types,
 					});
-					this.getRecord();
+
+					this.editFormVisible = false;
+					this.addFormVisible = false;
+
+					if (para['execute']) {
+						this.init();
+					}
 				})
 			},
-			message(para) {
+			confirm: function(para) {
 				this.$confirm(para['msg'], para['title'], {
 					type: para['type']
 				}).then(() => {
-					this.loading = true;
-					this.requests(para['func'], para['para']);
+					this.requests(para);
 				}).catch(() => {
 				})
 			},
 			handleCurrentChange(val) {
 				this.page = val;
-				this.getRecord();
+				this.init();
 			},
 			handleSizeChange(val) {
 				this.pageNum = val;
-				this.getRecord();
+				this.init();
 			},
-			getRecord: function() {
+			init: function() {
 				let para = {
 					page: this.page,
 					pageNum: this.pageNum,
@@ -187,7 +195,7 @@
 				})
 			},
 			handleDel: function(index, row) {
-				this.message({
+				this.confirm({
 					msg: '确认删除该记录吗？',
 					title: '提示',
 					type: 'warning',
@@ -200,7 +208,7 @@
 			},
 			batchRemove: function() {
 				let ids = this.sels.map(item => item.id).toString();
-				this.message({
+				this.confirm({
 					msg: '确认删除选中记录吗？',
 					title: '提示',
 					type: 'warning',
@@ -210,12 +218,14 @@
 			},
 			handleChange: function() {
 				if (this.dates.length >= 2) {
-					this.getRecord();
-				} else {}
+					this.init();
+				} else {
+
+				}
 			}
 		},
 		mounted() {
-			this.getRecord();
+			this.init();
 		},
 	}
 </script>

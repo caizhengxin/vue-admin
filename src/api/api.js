@@ -2,11 +2,13 @@
 * @Author: caixin
 * @Date:   2017-11-25 16:13:36
 * @Last Modified by:   1249614072@qq.com
-* @Last Modified time: 2017-12-07 11:08:41
+* @Last Modified time: 2017-12-08 15:15:46
 */
 import axios from 'axios';
 
 let base = '';
+
+const UsersCharts = params => { return axios.get(`${base}/usercharts`, { params: params }); };
 
 const CMSLogin = params => { return axios.post(`${base}/login`, params).then(res => res.data); };
 
@@ -35,6 +37,8 @@ const addCMSUsers = params => { return axios.post(`${base}/addcmsuser`, params).
 
 
 export {
+	UsersCharts,
+
 	CMSLogin,
 
 	getUserList,

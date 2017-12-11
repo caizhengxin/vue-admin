@@ -198,7 +198,7 @@
 
 	export default {
 		data() {
-		    var validatePass = (rule, value, callback) => {
+		    let validatePass = (rule, value, callback) => {
 		        if (value === '') {
 		        	callback(new Error('请输入密码'));
 		        }else{
@@ -209,7 +209,7 @@
 		        }
 		    }
 
-		    var validatePass2 = (rule, value, callback) => {
+		    let validatePass2 = (rule, value, callback) => {
 		    	if (value === '') {
 		    		callback(new Error('请再次输入密码'));
 		    	} else if (value !== this.addForm.password) {
@@ -302,9 +302,6 @@
 					this.group = res.data.cmsgroup;
 				})
 			},
-			// formatStatus: function(row, column) {
-			// 	return row.status == 1 ? '禁用' : '可用';
-			// },
 			handleCurrentChange(val) {
 				this.page = val;
 				this.init();
@@ -351,7 +348,6 @@
 				});
 			},
 			handleAdd: function() {
-				this.getGroup();
 				this.addFormVisible = true;
 			},
 			handleAddSubmit: function(){
@@ -376,7 +372,6 @@
 			},
 
 			handleEditSubmit: function() {
-				console.log(this.editForm);
 				this.$refs.editForm.validate((valid) => {
 					if (valid) {
 						this.confirm({
@@ -396,6 +391,7 @@
 			},
 		},
 		mounted() {
+			this.getGroup();
 			this.init();
 		},
 	}

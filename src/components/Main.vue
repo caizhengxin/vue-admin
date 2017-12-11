@@ -84,7 +84,7 @@
             handleClose: function(key, keyPath) {
                 // console.log(key, keyPath);
             },
-            collapse: function() {
+            collapse: function() { 
                 this.isCollapse = !this.isCollapse;
             },
             handleLogout: function() {

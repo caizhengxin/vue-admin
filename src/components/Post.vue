@@ -1,11 +1,13 @@
 <template>
 	<section class="record-box">
 		<el-col :span="24" class="toolbar">
-			<el-form :model="filters">
-				<el-form-item>
-					<el-input placeholder="日期" class="search" :model="filters.name"></el-input>
-				</el-form-item>
-			</el-form>
+			<el-input 
+			  placeholder="请输入用户名/手机号"
+			  v-model.trim="search"
+			  class="search"
+			  @input="handleChangeSearch"
+			  suffix-icon="el-icon-search">
+			</el-input>
 		</el-col>
 
 		<el-table
@@ -15,20 +17,35 @@
 		  highlight-current-row
 		  show-header
 		  @selection-change="handleSelectionChange"
+		  :default-sort = "{prop: 'startdate', order: 'descending'}"
 		  v-loading="loading">
 		  >
 		  	<el-table-column type="selection" width="55">
     		</el-table-column>
 		  	<el-table-column type="index" width="60">
 		  	</el-table-column>
-			<el-table-column prop="ip" label="IP" width="180" sortable></el-table-column>
-			<el-table-column prop="url" label="url" width="180" sortable></el-table-column>
-			<el-table-column prop="address" label="地址" min-width="180" sortable>
+			<el-table-column prop="name" label="用户" width="80" sortable></el-table-column>
+			<el-table-column prop="tel" label="手机号" width="120" sortable></el-table-column>
+			<el-table-column prop="startdate" label="注册时间" width="160" sortable>
 			</el-table-column>
-			<el-table-column prop="date" label="日期" width="180" sortable>
+			<el-table-column prop="enddate" label="最近登录时间" width="160" sortable>
+			</el-table-column>
+			<el-table-column prop="startip" label="注册IP" width="140" sortable>
+			</el-table-column>
+			<el-table-column prop="endip" label="最近注册IP" min-width="140" sortable>
+			</el-table-column>
+			<el-table-column prop="status" label="状态" width="80"
+			  :filters="[{text: '可用', value: '1'}, {text: '禁用', value: '0'}]"
+			  :filter-method="filterStauts"
+			  filter-placement="bottom-end">
+				<template slot-scope="scope">
+					<el-tag size="mini" v-if="scope.row.status == 1">可用</el-tag>
+					<el-tag size="mini" v-else type="danger">禁用</el-tag>
+				</template>
 			</el-table-column>
 			<el-table-column label="操作" width="150">
 				<template slot-scope="scope">
+					<el-button size="mini" @click="handleBlack(scope.$index, scope.row)">{{ scope.row.status == 1 ? '拉黑' : '恢复' }}</el-button>
 					<el-button size="mini" type="danger" @click="handleDel(scope.$index, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
@@ -59,23 +76,16 @@
         background-color:#eee;
         margin-bottom: 10px;
     }
-    .block {
-    	margin: 10px;
-    	overflow: hidden;
-    	float: right;
-    }
-/*	.search{
-		width: 30%;
+
+	.toolbar {
+		padding: 10px;
 	}
-	.el-form {
-		overflow: hidden;
-		margin: 10px;
-	}
-	.toolbar .el-form-item {
+
+	.search {
+		width: 20%;
 		float: left;
-		margin-bottom: 0;
-		margin-right: 20px;
-	}*/
+	}
+
 	tr {
 		text-align: left;
 	}
@@ -98,105 +108,95 @@
 </style>
 
 <script>
-	import {getRecordPage, deleteRecordPage, deleteRecordBatch} from '../api/api';
+	import {deleteUser, deleteUsers, getUserList, modifyUsers} from '../api/api';
 
 	export default {
 		data() {
 			return {
-				filters: {
-					name: ''
-				},
 				tableData: [],
-				pickerOptions: {
-          			shortcuts: [{
-            			text: '最近一周',
-		            	onClick(picker) {
-		              		const end = new Date();
-			              	const start = new Date();
-			              	start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-			              	picker.$emit('pick', [start, end]);
-		            	}
-          			},
-          			{
-            			text: '最近一个月',
-            			onClick(picker) {
-					      	const end = new Date();
-					      	const start = new Date();
-					      	start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-					      	picker.$emit('pick', [start, end]);
-            			}
-          			},
-          			{
-            			text: '最近三个月',
-            			onClick(picker) {
-              				const end = new Date();
-              				const start = new Date();
-              				start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              				picker.$emit('pick', [start, end]);
-            			}
-          			}]
-        		},
-        		dates: '',
         		total: 0,
         		page: 1,
         		loading: false,
         		pageNum: 10,
         		sels: [],
+        		search: '',
 			}
 		},
 		methods: {
-			requests(func, para) {
-				func(para).then(data => {
-					this.loading = false;
-					let types = "success"
+			requests(para) {
+				para['func'](para['para']).then(data => {
+
+					let types = "success";
+					let msg = data.msg
+
 					if (data['code'] != 200) {
-						types = "error"
+						types = "error";
+						msg = "操作失败"
 					}
 					this.$message({
-						message: data.msg,
+						message: msg,
 						type: types,
 					});
-					this.getRecord();
+
+					this.editFormVisible = false;
+					this.addFormVisible = false;
+
+					if (para['execute']) {
+						this.init();
+					}
 				})
 			},
-			message(para) {
+			confirm(para) {
 				this.$confirm(para['msg'], para['title'], {
 					type: para['type']
 				}).then(() => {
-					this.loading = true;
-					this.requests(para['func'], para['para']);
+					this.requests(para);
 				}).catch(() => {
 				})
 			},
+			// formatStatus: function(row, column) {
+			// 	return row.status == 1 ? '禁用' : '可用';
+			// },
 			handleCurrentChange(val) {
 				this.page = val;
-				this.getRecord();
+				this.init();
 			},
 			handleSizeChange(val) {
 				this.pageNum = val;
-				this.getRecord();
+				this.init();
 			},
-			getRecord: function() {
+			init: function() {
 				let para = {
+					name: this.search,
 					page: this.page,
 					pageNum: this.pageNum,
-					startDate: this.dates[0],
-					endDate: this.dates[1],
 				};
 				this.loading = true;
-				getRecordPage(para).then((res) => {
-					this.tableData = res.data.records;
+				getUserList(para).then((res) => {
+					this.tableData = res.data.users;
 					this.total = res.data.total;
 					this.loading = false;
 				})
 			},
 			handleDel: function(index, row) {
-				this.message({
+				this.confirm({
 					msg: '确认删除该记录吗？',
 					title: '提示',
 					type: 'warning',
-					func: deleteRecordPage,
+					func: deleteUser,
 					para: {id: row.id},
+					execute: true,
+				});
+			},
+			handleBlack: function(index, row) {
+				let msg = row.status == 1 ? '确认拉黑吗？' : '确认恢复吗？'
+				this.confirm({
+					msg: msg,
+					title: '提示',
+					type: 'warning',
+					func: modifyUsers,
+					para: {id: row.id},
+					execute: true,
 				});
 			},
 			handleSelectionChange: function(sels) {
@@ -204,22 +204,24 @@
 			},
 			batchRemove: function() {
 				let ids = this.sels.map(item => item.id).toString();
-				this.message({
+				this.confirm({
 					msg: '确认删除选中记录吗？',
 					title: '提示',
 					type: 'warning',
-					func: deleteRecordBatch,
+					func: deleteUsers,
 					para: {ids: ids},
+					execute: true,
 				});
 			},
-			handleChange: function() {
-				if (this.dates.length >= 2) {
-					this.getRecord();
-				} else {}
-			}
+			handleChangeSearch: function() {
+				this.init();
+			},
+			filterStauts: function(value, row) {
+				return row.status == value;
+			},
 		},
 		mounted() {
-			this.getRecord();
+			this.init();
 		},
 	}
 </script>

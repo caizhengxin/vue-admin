@@ -2,12 +2,13 @@
 * @Author: caixin
 * @Date:   2017-11-27 14:55:11
 * @Last Modified by:   1249614072@qq.com
-* @Last Modified time: 2017-12-07 11:31:51
+* @Last Modified time: 2017-12-08 17:35:00
 */
 import axios from 'axios'
 import Mock from 'mockjs'
 import MockAdapter from 'axios-mock-adapter'
 import {Record, User, CMSGroup, CMSUser, LoginUsers} from './data/data'
+// import {UserCharts} from './data/charts'
 
 let _Record = Record;
 let _User = User;
@@ -20,14 +21,30 @@ export default {
 		let mock = new MockAdapter(axios);
 
 		mock.onGet('/success').reply(200, {
-				msg: 'success',
-			}
-		)
+			msg: 'success',
+		})
 
 		mock.onGet('/error').reply(500, {
-				msg: 'failure',
-			}
-		)
+			msg: 'failure',
+		})
+
+		mock.onGet('/usercharts').reply(config => {
+			return new Promise((resolve, reject) => {
+				setTimeout(() => {
+				   	let UserCharts = [];
+					for (let i = 0; i < 1; i++) {
+					  UserCharts.push(Mock.mock({
+					    id: Mock.Random.guid(),
+					    num: Mock.Random.integer(0, 100),
+					    date: Mock.Random.now('dd'),
+					  }));
+					}
+				   	resolve([200, {
+				    	usercharts: UserCharts,
+				    }]);
+				}, 1000)
+			})
+		})
 
         mock.onPost('/login').reply(config => {
           	let {email, password, remember} = JSON.parse(config.data);
